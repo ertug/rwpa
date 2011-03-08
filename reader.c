@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 		sem_wait(mutex);
 		*rc = *rc - 1;
 		if (*rc == 0) sem_post(mutex_wrt);
-		//printf("rc:%d\n", *rc);
 		sem_post(mutex);
 	}
 }

@@ -10,7 +10,7 @@
 #include "logger.h"
 #include "common.h"
 
-static const char *CONFIG_FILE_PATH = "main.cfg";
+static const char CONFIG_FILE_PATH[] = "main.cfg";
 int num_readers = 0;
 int num_writers = 0;
 int reader_delay_ms = 0;
@@ -183,9 +183,5 @@ int main(int argc, char *argv[])
 	init_process_pool();
 	log_append("Child processes started.");
 
-	//int *rc = shared_rc_get();
-	while(1) {
-		//printf("rc:%d", *rc);
-		sleep(1);
-	}
+	while(1) sleep(1);
 }

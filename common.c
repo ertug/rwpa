@@ -11,7 +11,7 @@
 #include <errno.h>
 
 
-char SHARED_FILE_PATH[] = "shared.dat";
+static const char SHARED_FILE_PATH[] = "shared.dat";
 int shmid;
 
 void chld_terminate()

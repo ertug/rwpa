@@ -30,13 +30,15 @@ int main(int argc, char *argv[])
 	ts.tv_sec = 0;
 	ts.tv_nsec = writer_delay_ms * 1000000;
 
+	// seed pid to rand
+	srand(getpid());
+
 	int val;
 	while (1) {
 		nanosleep(&ts, NULL);
 
 		sem_wait(mutex_wrt);
 
-		srand(val);
 		val = rand();
 		shared_file_write(val);
 		char log_msg[100];
