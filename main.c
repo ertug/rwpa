@@ -4,6 +4,8 @@
 #include <time.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "logger.h"
 #include "common.h"
@@ -154,8 +156,12 @@ void fork_children(char *pname, int num, int delay)
 
 void init_process_pool()
 {
+	// init shared objs
+	shared_file_write(0);
 	int *rc = shared_rc_get();
 	*rc = 0;
+
+	// start
 	fork_children("reader", num_readers, reader_delay_ms);
 	fork_children("writer", num_writers, writer_delay_ms);
 }
