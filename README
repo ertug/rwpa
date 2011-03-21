@@ -1,0 +1,22 @@
+RWPA - Reader Writer Processes Application
+==========================================
+
+A C application for demonstrating the consumer-producer problem.
+It utilizes POSIX multi-processing, semaphores, shared memory, and signals.
+Tested on Linux.
+
+
+Licence
+=======
+RWPA is licenced under GPLv3.
+
+
+Dependencies
+============
+GCC
+Scons
+
+
+Author
+======
+Ertug Karamatli (ertug@karamatli.com)
