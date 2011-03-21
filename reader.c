@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <errno.h>
 
 #include "logger.h"
 #include "common.h"
@@ -12,8 +13,8 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "At least 1 arg needed.");
 		exit(EXIT_FAILURE);
 	}
-	int reader_wait_ms = atoi(argv[1]);
-	if (reader_wait_ms < 1 && reader_wait_ms > 999) {
+	int reader_delay_ms = atoi(argv[1]);
+	if (reader_delay_ms < 1 && reader_delay_ms > 999) {
 		fprintf(stderr, "max read delay should be between 1 and 999");
 		exit(EXIT_FAILURE);
 	}
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
 
 	struct timespec ts;
 	ts.tv_sec = 0;
-	ts.tv_nsec = reader_wait_ms * 1000000;
+	ts.tv_nsec = reader_delay_ms * 1000000;
 
 	while (1) {
 		nanosleep(&ts, NULL);

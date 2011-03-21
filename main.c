@@ -11,8 +11,8 @@
 static const char *CONFIG_FILE_PATH = "main.cfg";
 int num_readers = 0;
 int num_writers = 0;
-int reader_wait_ms = 0;
-int writer_wait_ms = 0;
+int reader_delay_ms = 0;
+int writer_delay_ms = 0;
 
 
 int *cpid_arr_get()
@@ -128,7 +128,7 @@ void ins_sig_hdls()
 void read_config()
 {
 	FILE *fp = fopen(CONFIG_FILE_PATH, "r");
-	fscanf(fp, "%d, %d, %d, %d", &num_readers, &num_writers, &reader_wait_ms, &writer_wait_ms);
+	fscanf(fp, "%d, %d, %d, %d", &num_readers, &num_writers, &reader_delay_ms, &writer_delay_ms);
 }
 
 void fork_children(char *pname, int num, int delay)
@@ -156,8 +156,8 @@ void init_process_pool()
 {
 	int *rc = shared_rc_get();
 	*rc = 0;
-	fork_children("reader", num_readers, reader_wait_ms);
-	fork_children("writer", num_writers, writer_wait_ms);
+	fork_children("reader", num_readers, reader_delay_ms);
+	fork_children("writer", num_writers, writer_delay_ms);
 }
 
 int main(int argc, char *argv[])
@@ -170,8 +170,8 @@ int main(int argc, char *argv[])
 
 	read_config();
 	char log_msg[100];
-	const char *log_fmt = "Config file read. num_readers=%d, num_writers=%d, reader_wait_ms=%d, writer_wait_ms=%d";
-	sprintf(log_msg, log_fmt, num_readers, num_writers, reader_wait_ms, writer_wait_ms);
+	const char *log_fmt = "Config file read. num_readers=%d, num_writers=%d, reader_delay_ms=%d, writer_delay_ms=%d";
+	sprintf(log_msg, log_fmt, num_readers, num_writers, reader_delay_ms, writer_delay_ms);
 	log_append(log_msg);
 
 	init_process_pool();

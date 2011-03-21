@@ -8,8 +8,11 @@
 #include <sys/shm.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
 
 
+char SHARED_FILE_PATH[] = "shared.dat";
+int shmid;
 
 void chld_terminate()
 {
@@ -47,9 +50,9 @@ sem_t *mutex_get(char *sem_name)
 {
 	sem_t *mutex = sem_open(sem_name, O_CREAT, 0644, 1);
 	if (mutex == SEM_FAILED) {
-		perror("unable to create semaphore");
+		fprintf(stderr, "can't create semaphore, error %d\n", errno);
 		sem_unlink(sem_name);
-			exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	return mutex;
 }
@@ -61,9 +64,6 @@ void mutex_destroy(char *sem_name)
 	sem_unlink(sem_name);
 }
 
-
-int shmid;
-
 int *shared_rc_get()
 {
 	static const int SHM_KEY = 843;
@@ -71,7 +71,7 @@ int *shared_rc_get()
 	if (shmid == NULL) {
 		shmid = shmget(SHM_KEY, sizeof(int), IPC_CREAT|0666);
 		if (shmid < 0) {
-			perror("shmget");
+			fprintf(stderr, "shmget, error %d\n", errno);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -87,25 +87,16 @@ void shared_rc_destroy()
 
 int shared_file_read()
 {
-	static FILE *fp;
-	if (fp == NULL) {
-		fp = fopen("shared.dat", "r");
-	}
+	FILE *fp = fopen(SHARED_FILE_PATH, "r");
 	int val;
-	fseek(fp, 0, SEEK_SET);
 	fscanf(fp, "%d", &val);
+	fclose(fp);
 	return val;
 }
 
 void shared_file_write(int val)
 {
-	static FILE *fp;
-	if (fp == NULL) {
-		fp = fopen("shared.dat", "w");
-	}
-
-	fseek(fp, 0, SEEK_SET);
-	char strbuf[100];
+	FILE *fp = fopen(SHARED_FILE_PATH, "w");
 	fprintf(fp, "%d", val);
-	fflush(fp);
+	fclose(fp);
 }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
+#include <errno.h>
 
 #include "logger.h"
 #include "common.h"
@@ -13,8 +14,8 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "At least 1 arg needed.");
 		exit(EXIT_FAILURE);
 	}
-	int writer_wait_ms = atoi(argv[1]);
-	if (writer_wait_ms < 1 && writer_wait_ms > 999) {
+	int writer_delay_ms = atoi(argv[1]);
+	if (writer_delay_ms < 1 && writer_delay_ms > 999) {
 		fprintf(stderr, "max write delay should be between 1 and 999");
 		exit(EXIT_FAILURE);
 	}
@@ -27,7 +28,7 @@ int main(int argc, char *argv[])
 
 	struct timespec ts;
 	ts.tv_sec = 0;
-	ts.tv_nsec = writer_wait_ms * 1000000;
+	ts.tv_nsec = writer_delay_ms * 1000000;
 
 	int val;
 	while (1) {
